@@ -1,4 +1,4 @@
- from tercolor import color
+ from termcolor import color
 #improt the spy detetalis in spydetail libary
 from spydetails import spy,Spy,ChatMsg,friends
 from datetime import datetime
