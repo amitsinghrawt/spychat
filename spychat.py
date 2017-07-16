@@ -1,7 +1,7 @@
 import os
 from termcolor import colored
 #improt the spy detetalis in spydetail libary
-from spydetails import spy,Spy,ChatMsg,friends
+from spydetails import spy,Spy,Chat,friends
 from datetime import datetime
 from steganography.steganography import Steganography
 STATUS_MESSAGE =['status1','i am in class','spy is enjoying list!']
@@ -41,7 +41,7 @@ def read_chat_history():
                 if chat.sent_by_me:  # check if send_by_me is true
                     print colored('[%s] %s %s', "red") % (chat.time.strftime("%d %B %Y"), colored('You said:', 'blue'),chat.message)
                 else:
-                    print colored('[%s] %s said: %s', 'black') % (
+                    print colored('[%s] %s said: %s', 'blue') % (
                     chat.time.strftime("%d %B %Y"), colored(friends[read_for].name, "blue"),
                     chat.message)  # printing time and chat emssage send by spy
 
@@ -87,19 +87,18 @@ def read_message():
             secret_text = Steganography.decode(output_path)  # decode the txt from image
             if len(secret_text) > 0:  # if there is secret msg in image only then this if true
                 new_chat = Chat(secret_text, False)  # Chat class called and secret text stored
-                words = secret_text.split()  # creating list of words of secret message
-                friends[sender].average = (float(friends[sender].average * len(friends[sender].chats) + len(words))) / (
-                len(friends[sender].chats) + 1)  # calculating average
-                print colored("Average word count is: %.2f", "blue") % (friends[sender].average)  # printing average
+                words = secret_text.split() # creating list of words of secret message
+                print "your message :%s"%secret_text
                 friends[sender].chats.append(new_chat)  # append the message
                 print colored("Your secret message has been saved!", "green")  # print when msg saved
+
             else:
                 print colored("there is no secret message in this image", "red")  # print when len of secret msg < 0
         else:
             print colored("No such file present !", "red")  # print when no file present  by the name given by spy
 
 
-def selcet_friend():
+def select_a_friend():
     item_number = 0
     for friend in friends:  # fetching friends from friends list created in spy_details
         print '%d. %s aged %d with rating %.2f is online' % (item_number + 1, friend.name, friend.age, friend.rating)
@@ -131,8 +130,8 @@ def add_status(current_status_message):
     if ques.upper() == 'N':
         new_status = raw_input('enter your status')
         if len(new_status) > 0:
-            STATUS_MESSAGE.append(new_status)
-            now_status = new_status
+           STATUS_MESSAGE.append(new_status)
+           now_status = new_status
     else:
         for i in STATUS_MESSAGE:
             print str(STATUS_MESSAGE.index(i)) + '.' + i
@@ -159,6 +158,7 @@ def add_friend():
 
 #this funtion is use for starting chat
 def start_chat():
+    current_status_message=None
     show_menu=True
     while (show_menu):
         menu_choice = 'What do you want to do? \n 1. Add a status update \n 2.Add frinend  \n 3.send  a secrrt message \n 4.read a secret message \n 5.read chat history from a user \n 6. close appliction'
@@ -166,7 +166,7 @@ def start_chat():
         menu_choice = int(menu_choice)
         if menu_choice == 1:
             print 'You chose to update the status'
-            add_status()#calling add _status funtion
+            current_status_message = add_status(current_status_message)#calling add _status funtion
         elif menu_choice == 2:
             add_friend()#calling add _friend funtion
         elif menu_choice == 3:
